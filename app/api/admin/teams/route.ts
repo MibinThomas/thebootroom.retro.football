@@ -10,15 +10,17 @@ export async function GET() {
     include: { players: true },
     orderBy: { createdAt: 'desc' },
   });
-  return NextResponse.json({
-    teams: teams.map((team) => ({
-      id: team.id,
-      teamName: team.teamName,
-      companyName: team.companyName,
-      attendance: team.attendance,
-      ticketPdfUrl: team.ticketPdfUrl ?? null,
-      brandGuidelinesUrl: team.brandGuidelinesUrl ?? null,
-      logoUrl: team.logoUrl ?? null,
-    })),
-  });
+  return NextResponse.json(
+  teams.map((team) => ({
+    id: team.id,
+    teamName: team.teamName,
+    companyName: team.companyName,
+    attendance: team.attendance,
+    ticketPdfUrl: team.ticketPdfUrl ?? null,   // ✅ correct
+    brandGuideUrl: team.brandGuideUrl ?? null, // ✅ correct
+    logoUrl: team.logoUrl ?? null,
+    players: team.players, // if you need players in admin list
+  }))
+);
+
 }
