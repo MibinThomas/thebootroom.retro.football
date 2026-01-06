@@ -24,7 +24,7 @@ type TeamForTicket = {
   players: Player[];
 };
 
-function toBuffer(doc: PDFKit.PDFDocument): Promise<Buffer> {
+function toBuffer(doc: any): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     const chunks: Buffer[] = [];
     doc.on("data", (chunk) => chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk)));
