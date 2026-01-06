@@ -16,7 +16,7 @@ export async function GET() {
       teamName: team.teamName,
       companyName: team.companyName,
       attendance: team.attendance,
-      ticketUrl: team.ticketUrl ?? null,
+      ticketPdfUrl: team.ticketPdfUrl ?? null,
       brandGuidelinesUrl: team.brandGuidelinesUrl ?? null,
       logoUrl: team.logoUrl ?? null,
     })),
