@@ -15,7 +15,7 @@ export default async function AdminTeamView({
 
   if (!team) return notFound();
 
-  const ticketUrl = team.ticketPdfUrl || team.ticketUrl || null; // keep compatible
+  const ticketUrl = team.ticketPdfUrl || null;
   const logoUrl = team.logoUrl || null;
   const guideUrl = team.brandGuideUrl || null;
 
