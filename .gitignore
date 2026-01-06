@@ -1,0 +1,58 @@
+# ===============================
+# Node / Next.js
+# ===============================
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# ===============================
+# Logs
+# ===============================
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# ===============================
+# Environment files (IMPORTANT)
+# ===============================
+.env
+.env.local
+.env.development
+.env.production
+.env*.local
+
+# ===============================
+# Prisma
+# ===============================
+prisma/dev.db
+prisma/*.db
+prisma/*.db-journal
+
+# ===============================
+# OS / Editor junk
+# ===============================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# ===============================
+# Vercel
+# ===============================
+.vercel
+
+# ===============================
+# Uploads & generated files
+# ===============================
+public/uploads/
+public/tickets/
+
+# ===============================
+# Tests / coverage (optional)
+# ===============================
+coverage/
