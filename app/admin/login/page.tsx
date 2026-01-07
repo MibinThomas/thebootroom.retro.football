@@ -12,16 +12,16 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setErr("");
 
-    const res = await signIn("credentials", {
+    // ✅ redirect:true => don't use return value
+    await signIn("credentials", {
       email,
       password,
-      redirect: true,
       callbackUrl: "/admin",
+      redirect: true,
     });
 
-    // With redirect:true, NextAuth will handle navigation.
-    // If redirect is blocked, res?.error can be used:
-    if (res?.error) setErr("Invalid admin credentials");
+    // If credentials are wrong, NextAuth will redirect back with ?error=CredentialsSignin
+    // You can read that from searchParams on the page (optional).
   };
 
   return (
