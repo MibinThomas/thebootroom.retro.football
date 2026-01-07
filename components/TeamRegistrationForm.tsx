@@ -254,7 +254,7 @@ export default function TeamRegistrationForm() {
         {/* Player Registration Section */}
         <section>
           <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">Player Registration</h2>
-          <p className="text-secondary mt-4">Please provide details for each player on your team.</p>
+          <p className="text-secondary mt-4">Note: - Jerseys will be oversized in width and length standard</p>
           {players.map((player, idx) => (
             <div key={idx} className="mt-4 border border-secondary rounded">
               <h3 className="bg-primary text-secondary font-heading px-4 py-2">Player {idx + 1}</h3>
