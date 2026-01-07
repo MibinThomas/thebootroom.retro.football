@@ -28,13 +28,13 @@ export default function TeamRegistrationForm() {
   const [captainEmail, setCaptainEmail] = useState('');
   const [captainPhone, setCaptainPhone] = useState('');
   const [players, setPlayers] = useState<Player[]>(
-  Array.from({ length: 10 }, () => ({
-    name: "",
-    jerseySize: "M",
-    preferredPosition: "",
-    jerseyNumber: "", // ✅ add
-  }))
-);
+    Array.from({ length: 10 }, () => ({
+      name: "",
+      jerseySize: "M",
+      preferredPosition: "",
+      jerseyNumber: "", // ✅ add
+    }))
+  );
 
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -87,15 +87,20 @@ export default function TeamRegistrationForm() {
         body: formData,
       });
       if (response.ok) {
-        const data = await response.json();
+        const text = await response.text();
+        let data: any = {};
+        try { data = JSON.parse(text); } catch { }
+        alert(data.error || text || "Something went wrong");
         if (data?.teamId) {
           window.location.href = `/register/success?teamId=${data.teamId}`;
         } else {
           window.location.href = '/register/success';
         }
       } else {
-        const data = await response.json();
-        alert(data.error || 'Something went wrong.');
+        const text = await response.text();
+        let data: any = {};
+        try { data = JSON.parse(text); } catch { }
+        alert(data.error || text || "Something went wrong");
       }
 
     } catch (error) {
@@ -120,12 +125,12 @@ export default function TeamRegistrationForm() {
     captainPhone.trim();
 
   const arePlayersComplete = players.every(
-  (p) =>
-    p.name.trim() &&
-    p.preferredPosition.trim() &&
-    p.jerseySize.trim() &&
-    p.jerseyNumber.trim() // ✅ NEW
-);
+    (p) =>
+      p.name.trim() &&
+      p.preferredPosition.trim() &&
+      p.jerseySize.trim() &&
+      p.jerseyNumber.trim() // ✅ NEW
+  );
 
   const canSubmit =
     !submitting && confirmEmployees && agreeTerms && isTeamComplete && arePlayersComplete;
@@ -300,8 +305,8 @@ export default function TeamRegistrationForm() {
                       key={size}
                       onClick={() => handlePlayerChange(idx, 'jerseySize', size)}
                       className={`px-2 py-1 border border-secondary rounded font-heading ${player.jerseySize === size
-                          ? 'bg-primary text-secondary'
-                          : 'bg-panel text-primary'
+                        ? 'bg-primary text-secondary'
+                        : 'bg-panel text-primary'
                         }`}
                     >
                       {size}
