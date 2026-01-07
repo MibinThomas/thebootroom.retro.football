@@ -56,13 +56,14 @@ export async function generateTicketPdf(team: TeamForTicket) {
   doc.restore();
 
   // Title
-  doc.image(logoPath, {
-  fit: [180, 80],      // control logo size
-  align: "center",
-  valign: "top",
-  x: (doc.page.width - 180) / 2,
-  y: 30,
-});
+  const logoW = 180;
+const logoH = 80;
+const logoX = (doc.page.width - logoW) / 2;
+const logoY = 30;
+
+// ✅ pdfkit typings friendly
+doc.image(logoPath, logoX, logoY, { fit: [logoW, logoH] });
+
   doc.fillColor("#b9b4b4ff").fontSize(16).text("TEAM ENTRY TICKET", 40, 85, { align: "center" });
 
   // Ticket meta box
