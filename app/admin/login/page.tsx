@@ -2,8 +2,14 @@
 
 import { useState } from "react";
 import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AdminLoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
@@ -12,16 +18,18 @@ export default function AdminLoginPage() {
     e.preventDefault();
     setErr("");
 
-    // ✅ redirect:true => don't use return value
-    await signIn("credentials", {
+    const res = await signIn("credentials", {
       email,
       password,
-      callbackUrl: "/admin",
-      redirect: true,
+      redirect: false, // ✅ important
     });
 
-    // If credentials are wrong, NextAuth will redirect back with ?error=CredentialsSignin
-    // You can read that from searchParams on the page (optional).
+    if (!res || res.error) {
+      setErr("Invalid admin credentials");
+      return;
+    }
+
+    router.push(callbackUrl);
   };
 
   return (
