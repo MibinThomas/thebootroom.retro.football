@@ -1,5 +1,6 @@
 import { Bebas_Neue, Poppins } from 'next/font/google';
 import './globals.css';
+import Image from "next/image";
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -23,10 +24,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-body bg-background text-foreground min-h-screen">
         {/* Global header centered with logo and site title */}
         <header className="flex flex-col items-center pt-3 pb-1 bg-background">
-  <img
+  <Image
     src="/logo.png"
     alt="The Bootroom logo"
-    className="h-14 w-auto"
+    width={220}
+    height={80}
+    priority
   />
   <span className="text-2xl font-heading uppercase text-primary leading-tight">
     The Bootroom
