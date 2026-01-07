@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -9,29 +9,29 @@ export default function AdminLoginPage() {
   const searchParams = useSearchParams();
 
   const callbackUrl = searchParams.get("callbackUrl") || "/admin";
+  const errorParam = searchParams.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
 
-    const onSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setErr("");
-
-        await signIn("credentials", {
-            email,
-            password,
-            redirect: true,
-            callbackUrl,
-        });
-    };
-
-    if (!res || res.error) {
+  useEffect(() => {
+    if (errorParam) {
       setErr("Invalid admin credentials");
-      return;
     }
+  }, [errorParam]);
 
-    router.push(callbackUrl);
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErr("");
+
+    // ✅ No res usage => no TS error
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: true,
+      callbackUrl,
+    });
   };
 
   return (
