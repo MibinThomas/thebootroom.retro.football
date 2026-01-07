@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* Global header centered with logo and site title */}
         <header className="flex flex-col items-center pt-3 pb-1 bg-background">
   <Image
-    src="/logo.png"
+    src="/logo.PNG"
     alt="The Bootroom logo"
     width={220}
     height={80}
