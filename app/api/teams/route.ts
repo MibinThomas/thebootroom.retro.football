@@ -5,23 +5,27 @@ import { put } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
 import { generateTicketPdf } from "@/lib/pdf";
 
-function cleanFileName(name: string) {
-  return name.replace(/[^a-zA-Z0-9_.-]/g, "");
-}
+type PlayerCreate = {
+  name: string;
+  jerseyNumber: string;
+  jerseySize: string;
+  preferredPosition: string;
+};
 
-async function uploadToBlob(file: File, folder: "uploads" | "tickets") {
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
+async function uploadToBlob(file: File | null, folder: string) {
+  if (!file || file.size === 0) return null;
 
-  const safeName = cleanFileName(file.name || "file");
-  const key = `${folder}/${crypto.randomUUID()}-${safeName}`;
+  const cleanName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "");
+  const key = `${folder}/${crypto.randomUUID()}-${cleanName}`;
 
-  const blob = await put(key, buffer, {
+  const buffer = Buffer.from(await file.arrayBuffer());
+
+  const uploaded = await put(key, buffer, {
     access: "public",
     contentType: file.type || "application/octet-stream",
   });
 
-  return blob.url; // public https url
+  return uploaded.url; // public URL
 }
 
 export async function POST(request: Request) {
@@ -39,14 +43,8 @@ export async function POST(request: Request) {
     const captainEmail = formData.get("captainEmail")?.toString() || "";
     const captainPhone = formData.get("captainPhone")?.toString() || "";
 
-    // Collect players (10)
-    const players: {
-      name: string;
-      jerseyNumber: string;
-      jerseySize: string;
-      preferredPosition: string;
-    }[] = [];
-
+    // players (10)
+    const players: PlayerCreate[] = [];
     for (let i = 0; i < 10; i++) {
       const name = formData.get(`players[${i}][name]`)?.toString() || "";
       const jerseyNumber =
@@ -59,16 +57,14 @@ export async function POST(request: Request) {
       players.push({ name, jerseyNumber, jerseySize, preferredPosition });
     }
 
-    // Upload optional files to Blob
     const logoFile = formData.get("logo") as File | null;
     const guidelinesFile = formData.get("guidelines") as File | null;
 
-    const logoUrl = logoFile ? await uploadToBlob(logoFile, "uploads") : null;
-    const brandGuideUrl = guidelinesFile
-      ? await uploadToBlob(guidelinesFile, "uploads")
-      : null;
+    // ✅ Upload files to Vercel Blob
+    const logoUrl = await uploadToBlob(logoFile, "uploads");
+    const brandGuidelinesUrl = await uploadToBlob(guidelinesFile, "uploads");
 
-    // Create team in DB
+    // ✅ Create team
     const team = await prisma.team.create({
       data: {
         teamName,
@@ -82,33 +78,33 @@ export async function POST(request: Request) {
         captainEmail,
         captainPhone,
         logoUrl: logoUrl ?? undefined,
-        brandGuideUrl: brandGuideUrl ?? undefined,
+        brandGuidelinesUrl: brandGuidelinesUrl ?? undefined,
         players: { create: players },
       },
       include: { players: true },
     });
 
-    // Generate ticket PDF (buffer) and upload to Blob
+    // ✅ Generate ticket PDF (Buffer)
     const pdfBuffer = await generateTicketPdf(team);
-    const ticketBlob = await put(`tickets/${team.id}.pdf`, pdfBuffer, {
+
+    // ✅ Upload ticket PDF to Vercel Blob
+    const ticketKey = `tickets/${team.id}.pdf`;
+    const ticketUpload = await put(ticketKey, pdfBuffer, {
       access: "public",
       contentType: "application/pdf",
     });
 
+    // ✅ Save ticket URL
     await prisma.team.update({
       where: { id: team.id },
-      data: { ticketPdfUrl: ticketBlob.url },
+      data: { ticketPdfUrl: ticketUpload.url },
     });
 
-    return NextResponse.json({
-      success: true,
-      teamId: team.id,
-      ticketPdfUrl: ticketBlob.url,
-    });
-  } catch (error) {
-    console.error("POST /api/teams error:", error);
+    return NextResponse.json({ success: true, teamId: team.id });
+  } catch (error: any) {
+    console.error("Create team error:", error);
     return NextResponse.json(
-      { error: "Failed to create team" },
+      { error: error?.message || "Failed to create team" },
       { status: 500 }
     );
   }
