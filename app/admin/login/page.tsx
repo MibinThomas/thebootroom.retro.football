@@ -1,70 +1,67 @@
 "use client";
 
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
-export default function AdminLogin() {
-  const [username, setUsername] = useState("");
+export default function AdminLoginPage() {
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [err, setErr] = useState("");
 
-  const onLogin = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setErr("");
 
-    const res = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password }),
+    const res = await signIn("credentials", {
+      email,
+      password,
+      redirect: true,
+      callbackUrl: "/admin",
     });
 
-    if (res.ok) {
-      window.location.href = "/admin";
-    } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data?.error || "Invalid credentials");
-    }
+    // With redirect:true, NextAuth will handle navigation.
+    // If redirect is blocked, res?.error can be used:
+    if (res?.error) setErr("Invalid admin credentials");
   };
 
   return (
-    <main className="min-h-screen bg-primary flex flex-col items-center px-4">
+    <div style={{ maxWidth: 420, margin: "60px auto", padding: 20 }}>
+      <h1 style={{ fontSize: 24, fontWeight: 700 }}>Admin Login</h1>
 
-      {/* Login Form */}
-      <form
-        onSubmit={onLogin}
-        className="mt-10 bg-panel border-4 border-secondary rounded-xl p-6 w-full max-w-md"
-      >
-        <h1 className="text-secondary font-heading text-3xl uppercase text-center">
-          Admin Login
-        </h1>
-
+      <form onSubmit={onSubmit} style={{ marginTop: 16 }}>
+        <label>Email</label>
         <input
-          type="text"
-          placeholder="Admin Username"
-          className="mt-6 w-full"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          type="email"
           required
+          style={{ width: "100%", padding: 10, marginTop: 6 }}
         />
 
+        <label style={{ display: "block", marginTop: 12 }}>Password</label>
         <input
-          type="password"
-          placeholder="Admin Password"
-          className="mt-4 w-full"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          type="password"
           required
+          style={{ width: "100%", padding: 10, marginTop: 6 }}
         />
 
-        {error && (
-          <p className="text-red-200 mt-3 text-sm text-center">
-            {error}
-          </p>
-        )}
+        {err && <p style={{ color: "red", marginTop: 10 }}>{err}</p>}
 
-        <button className="mt-6 w-full bg-secondary text-primary font-heading uppercase py-3 rounded shadow">
-          Login
+        <button
+          type="submit"
+          style={{
+            marginTop: 14,
+            width: "100%",
+            padding: 12,
+            fontWeight: 700,
+            cursor: "pointer",
+          }}
+        >
+          Sign in
         </button>
       </form>
-    </main>
+    </div>
   );
 }
