@@ -82,11 +82,7 @@ export async function generateTicketPdf(team: TeamForTicket) {
   const logoY = 30;
 
   // ✅ Use uploaded logoUrl (vercel blob) instead of local public/logo.png
-  const baseUrl = getBaseUrl();
-const bootroomLogoUrl = `${baseUrl}/public/logo.PNG`;
-
-const logoBuffer = await tryFetchImageBuffer(bootroomLogoUrl);
-
+  const logoBuffer = await tryFetchImageBuffer(team.logoUrl);
 
   if (logoBuffer) {
     doc.image(logoBuffer, logoX, logoY, { fit: [logoW, logoH] });
