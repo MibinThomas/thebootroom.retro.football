@@ -14,15 +14,17 @@ export default function AdminLoginPage() {
   const [password, setPassword] = useState("");
   const [err, setErr] = useState("");
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setErr("");
+    const onSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setErr("");
 
-    const res = await signIn("credentials", {
-      email,
-      password,
-      redirect: false, // ✅ important
-    });
+        await signIn("credentials", {
+            email,
+            password,
+            redirect: true,
+            callbackUrl,
+        });
+    };
 
     if (!res || res.error) {
       setErr("Invalid admin credentials");
