@@ -1,24 +1,20 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
-/**
- * Endpoint to mark attendance for a team. Expects a JSON body with teamId.
- * This route can be called when scanning a QR code from a ticket; it sets
- * the team's attendance to true.
- */
-export async function POST(request: Request) {
-  const { teamId } = await request.json();
-  if (!teamId) {
-    return NextResponse.json({ error: 'Missing teamId' }, { status: 400 });
+export async function POST(req: Request) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  try {
-    const team = await prisma.team.update({
-      where: { id: teamId },
-      data: { attendance: true },
-    });
-    return NextResponse.json({ team });
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: 'Failed to update attendance' }, { status: 500 });
-  }
+
+  const { teamId } = await req.json();
+
+  await prisma.team.update({
+    where: { id: teamId },
+    data: { attendance: true },
+  });
+
+  return NextResponse.json({ success: true });
 }

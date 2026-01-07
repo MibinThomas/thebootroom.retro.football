@@ -1,4 +1,5 @@
 // src/lib/pdf.ts
+// ✅ Uses BootRoom logo always (no team logo in ticket)
 
 import PDFDocument from "pdfkit";
 import QRCode from "qrcode";
@@ -20,7 +21,8 @@ type TeamForTicket = {
   captainPhone: string;
   createdAt?: Date;
   players: Player[];
-  logoUrl?: string | null; // ✅ uses vercel blob URL (no local file needed)
+  // logoUrl can still exist in DB, but we won't use it for ticket header
+  logoUrl?: string | null;
 };
 
 function toBuffer(doc: PDFKit.PDFDocument): Promise<Buffer> {
@@ -81,13 +83,17 @@ export async function generateTicketPdf(team: TeamForTicket) {
   const logoX = (doc.page.width - logoW) / 2;
   const logoY = 30;
 
-  // ✅ Use uploaded logoUrl (vercel blob) instead of local public/logo.png
-  const logoBuffer = await tryFetchImageBuffer(team.logoUrl);
+  // ✅ Always use BootRoom logo from /public
+  // Put your file here: public/bootroom-logo.png
+  const baseUrl = getBaseUrl();
+  const bootroomLogoUrl = `${baseUrl}/bootroom-logo.png`;
 
-  if (logoBuffer) {
-    doc.image(logoBuffer, logoX, logoY, { fit: [logoW, logoH] });
+  const bootroomLogoBuffer = await tryFetchImageBuffer(bootroomLogoUrl);
+
+  if (bootroomLogoBuffer) {
+    doc.image(bootroomLogoBuffer, logoX, logoY, { fit: [logoW, logoH] });
   } else {
-    // Fallback if no logo uploaded
+    // fallback if logo not reachable (env URL not set, etc.)
     doc.fillColor("#ffffff").fontSize(26).text("THE BOOTROOM", 40, 55, {
       align: "center",
     });
@@ -117,8 +123,7 @@ export async function generateTicketPdf(team: TeamForTicket) {
   doc.text(`Players: ${team.players?.length ?? 0}/10`, rightX, topY + 60);
 
   // QR Code (points to scan page)
-  const baseUrl = getBaseUrl();
-  const scanUrl = `${baseUrl}/scan/${team.id}`;
+  const scanUrl = `${baseUrl}/admin/scan/${team.id}`;
 
   const qrDataUrl = await QRCode.toDataURL(scanUrl, { margin: 1, scale: 6 });
   const qrBase64 = qrDataUrl.replace(/^data:image\/png;base64,/, "");
@@ -127,10 +132,13 @@ export async function generateTicketPdf(team: TeamForTicket) {
   // QR block
   doc.roundedRect(420, 285, 135, 160, 10).fill("#ffffff").stroke(ORANGE);
   doc.image(qrBuffer, 440, 305, { width: 95 });
-  doc.fillColor(DARK).fontSize(10).text("Scan at entry\nto mark attendance", 420, 410, {
-    width: 135,
-    align: "center",
-  });
+  doc
+    .fillColor(DARK)
+    .fontSize(10)
+    .text("Scan at entry\nto mark attendance", 420, 410, {
+      width: 135,
+      align: "center",
+    });
 
   // Players table title
   doc.fillColor(RED).fontSize(14).text("PLAYER LIST", 40, 290);
