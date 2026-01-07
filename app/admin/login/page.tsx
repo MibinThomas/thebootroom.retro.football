@@ -2,12 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function AdminLoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-
   const callbackUrl = searchParams.get("callbackUrl") || "/admin";
   const errorParam = searchParams.get("error");
 
@@ -16,16 +14,14 @@ export default function AdminLoginPage() {
   const [err, setErr] = useState("");
 
   useEffect(() => {
-    if (errorParam) {
-      setErr("Invalid admin credentials");
-    }
+    if (errorParam) setErr("Invalid admin credentials");
   }, [errorParam]);
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErr("");
 
-    // ✅ No res usage => no TS error
+    // ✅ No "res" variable at all => no TypeScript error possible
     await signIn("credentials", {
       email,
       password,
