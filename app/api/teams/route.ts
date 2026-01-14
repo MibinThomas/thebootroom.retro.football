@@ -48,16 +48,26 @@ export async function POST(request: Request) {
     }[] = [];
 
     for (let i = 0; i < 10; i++) {
-      const name = formData.get(`players[${i}][name]`)?.toString() || "";
-      const jerseyNumber =
-        formData.get(`players[${i}][jerseyNumber]`)?.toString() || "";
-      const jerseySize =
-        formData.get(`players[${i}][jerseySize]`)?.toString() || "";
-      const preferredPosition =
-        formData.get(`players[${i}][preferredPosition]`)?.toString() || "";
+  const name = formData.get(`players[${i}][name]`)?.toString() || "";
+  const jerseyNumber =
+    formData.get(`players[${i}][jerseyNumber]`)?.toString() || "";
+  const jerseySize =
+    formData.get(`players[${i}][jerseySize]`)?.toString() || "";
+  const preferredPosition =
+    formData.get(`players[${i}][preferredPosition]`)?.toString() || "";
 
-      players.push({ name, jerseyNumber, jerseySize, preferredPosition });
-    }
+  // only push if fully filled
+  if (name && jerseyNumber && jerseySize && preferredPosition) {
+    players.push({ name, jerseyNumber, jerseySize, preferredPosition });
+  }
+}
+
+if (players.length < 7) {
+  return NextResponse.json(
+    { error: "Minimum 7 players are required" },
+    { status: 400 }
+  );
+}
 
     // Upload optional files to Blob
     const logoFile = formData.get("logo") as File | null;

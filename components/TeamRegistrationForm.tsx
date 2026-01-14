@@ -1,15 +1,14 @@
 "use client";
 
-import { useState } from 'react';
-import TermsModal from './TermsModal';
+import { useState } from "react";
+import TermsModal from "./TermsModal";
 
 interface Player {
   name: string;
-  jerseyNumber: string;   // ✅ NEW
+  jerseyNumber: string; // ✅ NEW
   jerseySize: string;
   preferredPosition: string;
 }
-
 
 /**
  * Team registration form component. Collects team, company, and contact details
@@ -17,16 +16,16 @@ interface Player {
  * requirements client-side and submits data as multipart/form-data to the API.
  */
 export default function TeamRegistrationForm() {
-  const [teamName, setTeamName] = useState('');
-  const [companyName, setCompanyName] = useState('');
-  const [companySector, setCompanySector] = useState('');
-  const [companyAddress, setCompanyAddress] = useState('');
-  const [managerName, setManagerName] = useState('');
-  const [managerEmail, setManagerEmail] = useState('');
-  const [managerPhone, setManagerPhone] = useState('');
-  const [captainName, setCaptainName] = useState('');
-  const [captainEmail, setCaptainEmail] = useState('');
-  const [captainPhone, setCaptainPhone] = useState('');
+  const [teamName, setTeamName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [companySector, setCompanySector] = useState("");
+  const [companyAddress, setCompanyAddress] = useState("");
+  const [managerName, setManagerName] = useState("");
+  const [managerEmail, setManagerEmail] = useState("");
+  const [managerPhone, setManagerPhone] = useState("");
+  const [captainName, setCaptainName] = useState("");
+  const [captainEmail, setCaptainEmail] = useState("");
+  const [captainPhone, setCaptainPhone] = useState("");
   const [players, setPlayers] = useState<Player[]>(
     Array.from({ length: 10 }, () => ({
       name: "",
@@ -36,18 +35,21 @@ export default function TeamRegistrationForm() {
     }))
   );
 
-
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [guidelinesFile, setGuidelinesFile] = useState<File | null>(null);
   // Checkbox states
-  const [confirmEmployees, setConfirmEmployees] = useState(false);
+  // const [confirmEmployees, setConfirmEmployees] = useState(false);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // Terms derived from the contract; truncated for brevity.
-  const termsText = `Participation Terms:\n1. Each entry must be a corporate team of up to ten players.\n2. All players must be employees of the company.\n3. Payment of AED 3,500 + VAT per team is due within 3 days of registration.\n4. Cancellations within 7 days of the event incur a 50% fee; within 3 days no refund.\n5. The Bootroom and venue are not liable for injuries or loss.\n6. Teams consent to photography and promotional use of images.\n7. Teams must submit final player names 14 days before the event.`;
+  const termsText = `Participation Terms:\n1. Each entry must be a team of 7 minimum and maximum 10 players.\n2. Payment of AED 3,500 + VAT per team is due within 3 days of registration.\n3. Cancellations within 7 days of the event incur a 50% fee; within 3 days no refund.\n4. The Bootroom and venue are not liable for injuries or loss.\n5. Teams consent to photography and promotional use of images.\n6. Teams must submit final player names 14 days before the event.`;
 
-  const handlePlayerChange = (index: number, field: keyof Player, value: any) => {
+  const handlePlayerChange = (
+    index: number,
+    field: keyof Player,
+    value: any
+  ) => {
     setPlayers((prev) =>
       prev.map((p, idx) => (idx === index ? { ...p, [field]: value } : p))
     );
@@ -57,55 +59,63 @@ export default function TeamRegistrationForm() {
     e.preventDefault();
     // Prevent submission if form is incomplete
     if (!canSubmit) {
-      alert('Please complete all required fields and agree to the terms before submitting.');
+      alert(
+        "Please complete all required fields and agree to the terms before submitting."
+      );
       return;
     }
     setSubmitting(true);
     try {
       const formData = new FormData();
-      formData.append('teamName', teamName);
-      formData.append('companyName', companyName);
-      formData.append('companySector', companySector);
-      formData.append('companyAddress', companyAddress);
-      formData.append('managerName', managerName);
-      formData.append('managerEmail', managerEmail);
-      formData.append('managerPhone', managerPhone);
-      formData.append('captainName', captainName);
-      formData.append('captainEmail', captainEmail);
-      formData.append('captainPhone', captainPhone);
+      formData.append("teamName", teamName);
+      formData.append("companyName", companyName);
+      formData.append("companySector", companySector);
+      formData.append("companyAddress", companyAddress);
+      formData.append("managerName", managerName);
+      formData.append("managerEmail", managerEmail);
+      formData.append("managerPhone", managerPhone);
+      formData.append("captainName", captainName);
+      formData.append("captainEmail", captainEmail);
+      formData.append("captainPhone", captainPhone);
       players.forEach((player, idx) => {
         formData.append(`players[${idx}][name]`, player.name);
         formData.append(`players[${idx}][jerseyNumber]`, player.jerseyNumber); // ✅
         formData.append(`players[${idx}][jerseySize]`, player.jerseySize);
-        formData.append(`players[${idx}][preferredPosition]`, player.preferredPosition);
+        formData.append(
+          `players[${idx}][preferredPosition]`,
+          player.preferredPosition
+        );
       });
 
-      if (logoFile) formData.append('logo', logoFile);
-      if (guidelinesFile) formData.append('guidelines', guidelinesFile);
-      const response = await fetch('/api/teams', {
-        method: 'POST',
+      if (logoFile) formData.append("logo", logoFile);
+      if (guidelinesFile) formData.append("guidelines", guidelinesFile);
+      const response = await fetch("/api/teams", {
+        method: "POST",
         body: formData,
       });
       if (response.ok) {
         const text = await response.text();
         let data: any = {};
-        try { data = JSON.parse(text); } catch { }
+        try {
+          data = JSON.parse(text);
+        } catch {}
         alert(data.error || text || "Something went wrong");
         if (data?.teamId) {
           window.location.href = `/register/success?teamId=${data.teamId}`;
         } else {
-          window.location.href = '/register/success';
+          window.location.href = "/register/success";
         }
       } else {
         const text = await response.text();
         let data: any = {};
-        try { data = JSON.parse(text); } catch { }
+        try {
+          data = JSON.parse(text);
+        } catch {}
         alert(data.error || text || "Something went wrong");
       }
-
     } catch (error) {
       console.error(error);
-      alert('An unexpected error occurred.');
+      alert("An unexpected error occurred.");
     } finally {
       setSubmitting(false);
     }
@@ -124,25 +134,32 @@ export default function TeamRegistrationForm() {
     captainEmail.trim() &&
     captainPhone.trim();
 
-  const arePlayersComplete = players.every(
+  const filledPlayers = players.filter(
     (p) =>
       p.name.trim() &&
       p.preferredPosition.trim() &&
       p.jerseySize.trim() &&
-      p.jerseyNumber.trim() // ✅ NEW
+      p.jerseyNumber.trim()
   );
 
+  const arePlayersComplete =
+    filledPlayers.length >= 7;
+
   const canSubmit =
-    !submitting && confirmEmployees && agreeTerms && isTeamComplete && arePlayersComplete;
+    !submitting && agreeTerms && isTeamComplete && arePlayersComplete;
 
   return (
     <div className="max-w-5xl mx-auto bg-panel border-4 border-secondary rounded-xl shadow-lg overflow-hidden">
       {/* Page header inside the form container */}
-      <h1 className="bg-primary text-secondary text-center text-3xl font-heading py-4">Team Registration</h1>
+      <h1 className="bg-primary text-secondary text-center text-3xl font-heading py-4">
+        Team Registration
+      </h1>
       <form onSubmit={handleSubmit} className="p-6 space-y-8">
         {/* Team Details Section */}
         <section>
-          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">Team Details</h2>
+          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">
+            Team Details
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div>
               <label className="sr-only">Team Name</label>
@@ -258,28 +275,40 @@ export default function TeamRegistrationForm() {
         </section>
         {/* Player Registration Section */}
         <section>
-          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">Player Registration</h2>
-          <p className="text-secondary mt-4">Note: - Jerseys will be oversized in width and length standard</p>
+          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">
+            Player Registration
+          </h2>
+          <p className="text-secondary mt-4">
+            Note: - Jerseys will be oversized in width and length standard
+          </p>
           {players.map((player, idx) => (
             <div key={idx} className="mt-4 border border-secondary rounded">
-              <h3 className="bg-primary text-secondary font-heading px-4 py-2">Player {idx + 1}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 bg-panel">                {/* Player full name */}
+              <h3 className="bg-primary text-secondary font-heading px-4 py-2">
+                Player {idx + 1}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 bg-panel">
+                {" "}
+                {/* Player full name */}
                 <input
                   type="text"
                   placeholder="Player Full Name"
                   value={player.name}
-                  onChange={(e) => handlePlayerChange(idx, 'name', e.target.value)}
+                  onChange={(e) =>
+                    handlePlayerChange(idx, "name", e.target.value)
+                  }
                   className="col-span-1 md:col-span-1 placeholder-secondary placeholder-opacity-70"
-                  required
+                  required={idx < 7}
                 />
                 {/* Preferred position */}
                 <input
                   type="text"
                   placeholder="Preferred Position"
                   value={player.preferredPosition}
-                  onChange={(e) => handlePlayerChange(idx, 'preferredPosition', e.target.value)}
+                  onChange={(e) =>
+                    handlePlayerChange(idx, "preferredPosition", e.target.value)
+                  }
                   className="col-span-1 md:col-span-1 placeholder-secondary placeholder-opacity-70"
-                  required
+                  required={idx < 7}
                 />
                 <input
                   type="text"
@@ -294,20 +323,22 @@ export default function TeamRegistrationForm() {
                     )
                   }
                   className="col-span-1 placeholder-secondary placeholder-opacity-70"
-                  required
+                  required={idx < 7}
                 />
-
                 {/* Jersey size selector buttons */}
                 <div className="flex items-center space-x-1">
-                  {['S', 'M', 'L', 'XL', 'XXL'].map((size) => (
+                  {["S", "M", "L", "XL", "XXL"].map((size) => (
                     <button
                       type="button"
                       key={size}
-                      onClick={() => handlePlayerChange(idx, 'jerseySize', size)}
-                      className={`px-2 py-1 border border-secondary rounded font-heading ${player.jerseySize === size
-                        ? 'bg-primary text-secondary'
-                        : 'bg-panel text-primary'
-                        }`}
+                      onClick={() =>
+                        handlePlayerChange(idx, "jerseySize", size)
+                      }
+                      className={`px-2 py-1 border border-secondary rounded font-heading ${
+                        player.jerseySize === size
+                          ? "bg-primary text-secondary"
+                          : "bg-panel text-primary"
+                      }`}
                     >
                       {size}
                     </button>
@@ -319,10 +350,14 @@ export default function TeamRegistrationForm() {
         </section>
         {/* File Uploads Section */}
         <section>
-          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">Uploads</h2>
+          <h2 className="bg-primary text-secondary uppercase font-heading px-4 py-2 rounded">
+            Uploads
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
             <div>
-              <label className="block mb-1 font-heading text-secondary">Company Logo (PDF)</label>
+              <label className="block mb-1 font-heading text-secondary">
+                Company Logo (PDF)
+              </label>
               <input
                 type="file"
                 accept="application/pdf,image/*"
@@ -330,7 +365,9 @@ export default function TeamRegistrationForm() {
               />
             </div>
             <div>
-              <label className="block mb-1 font-heading text-secondary">Brand Guidelines (PDF)</label>
+              <label className="block mb-1 font-heading text-secondary">
+                Brand Guidelines (PDF)
+              </label>
               <input
                 type="file"
                 accept="application/pdf"
@@ -342,7 +379,7 @@ export default function TeamRegistrationForm() {
           <div className="p-4 flex flex-col md:flex-row md:items-start md:justify-between gap-6">
             {/* Checkbox block */}
             <div className="flex flex-col space-y-4">
-              <label className="flex items-start space-x-3">
+              {/* <label className="flex items-start space-x-3">
                 <input
                   type="checkbox"
                   checked={confirmEmployees}
@@ -353,7 +390,7 @@ export default function TeamRegistrationForm() {
                 <span className="text-sm text-primary leading-6">
                   I confirm all players are company employees
                 </span>
-              </label>
+              </label> */}
               <label className="flex items-start space-x-3">
                 <input
                   type="checkbox"
@@ -376,15 +413,16 @@ export default function TeamRegistrationForm() {
         {/* Footer Section */}
         <div className="flex items-center justify-between pt-4">
           <span className="font-heading text-secondary">
-            {players.length} to be players added
+            Minimum 7 players must be added
           </span>
           <button
             type="submit"
             disabled={!canSubmit}
-            className={`bg-secondary text-primary font-heading py-4 px-8 rounded shadow uppercase tracking-wider ${canSubmit ? '' : 'opacity-50 cursor-not-allowed'
-              }`}
+            className={`bg-secondary text-primary font-heading py-4 px-8 rounded shadow uppercase tracking-wider ${
+              canSubmit ? "" : "opacity-50 cursor-not-allowed"
+            }`}
           >
-            {submitting ? 'Submitting…' : 'Register Team'}
+            {submitting ? "Submitting…" : "Register Team"}
           </button>
         </div>
       </form>
