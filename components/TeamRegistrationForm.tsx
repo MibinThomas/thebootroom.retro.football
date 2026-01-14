@@ -56,70 +56,84 @@ export default function TeamRegistrationForm() {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // Prevent submission if form is incomplete
-    if (!canSubmit) {
-      alert(
-        "Please complete all required fields and agree to the terms before submitting."
-      );
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const formData = new FormData();
-      formData.append("teamName", teamName);
-      formData.append("companyName", companyName);
-      formData.append("companySector", companySector);
-      formData.append("companyAddress", companyAddress);
-      formData.append("managerName", managerName);
-      formData.append("managerEmail", managerEmail);
-      formData.append("managerPhone", managerPhone);
-      formData.append("captainName", captainName);
-      formData.append("captainEmail", captainEmail);
-      formData.append("captainPhone", captainPhone);
-      players.forEach((player, idx) => {
-        formData.append(`players[${idx}][name]`, player.name);
-        formData.append(`players[${idx}][jerseyNumber]`, player.jerseyNumber); // ✅
-        formData.append(`players[${idx}][jerseySize]`, player.jerseySize);
-        formData.append(
-          `players[${idx}][preferredPosition]`,
-          player.preferredPosition
-        );
-      });
+  e.preventDefault();
 
-      if (logoFile) formData.append("logo", logoFile);
-      if (guidelinesFile) formData.append("guidelines", guidelinesFile);
-      const response = await fetch("/api/teams", {
-        method: "POST",
-        body: formData,
-      });
-      if (response.ok) {
-        const text = await response.text();
-        let data: any = {};
-        try {
-          data = JSON.parse(text);
-        } catch {}
-        alert(data.error || text || "Something went wrong");
-        if (data?.teamId) {
-          window.location.href = `/register/success?teamId=${data.teamId}`;
-        } else {
-          window.location.href = "/register/success";
-        }
+  // Prevent submission if form is incomplete
+  if (!canSubmit) {
+    alert(
+      "Please complete all required fields and agree to the terms before submitting."
+    );
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    const formData = new FormData();
+
+    // Team details
+    formData.append("teamName", teamName);
+    formData.append("companyName", companyName);
+    formData.append("companySector", companySector);
+    formData.append("companyAddress", companyAddress);
+
+    // Manager details
+    formData.append("managerName", managerName);
+    formData.append("managerEmail", managerEmail);
+    formData.append("managerPhone", managerPhone);
+
+    // Captain details
+    formData.append("captainName", captainName);
+    formData.append("captainEmail", captainEmail);
+    formData.append("captainPhone", captainPhone);
+
+    // Players
+    players.forEach((player, idx) => {
+      formData.append(`players[${idx}][name]`, player.name);
+      formData.append(`players[${idx}][jerseyNumber]`, player.jerseyNumber);
+      formData.append(`players[${idx}][jerseySize]`, player.jerseySize);
+      formData.append(
+        `players[${idx}][preferredPosition]`,
+        player.preferredPosition
+      );
+    });
+
+    // Files
+    if (logoFile) formData.append("logo", logoFile);
+    if (guidelinesFile) formData.append("guidelines", guidelinesFile);
+
+    const response = await fetch("/api/teams", {
+      method: "POST",
+      body: formData,
+    });
+
+    // SUCCESS
+    if (response.ok) {
+      const data = await response.json();
+
+      alert(
+        data.message ||
+          "Team registration successful. Your entry ticket has been generated."
+      );
+
+      if (data?.teamId) {
+        window.location.href = `/register/success?teamId=${data.teamId}`;
       } else {
-        const text = await response.text();
-        let data: any = {};
-        try {
-          data = JSON.parse(text);
-        } catch {}
-        alert(data.error || text || "Something went wrong");
+        window.location.href = "/register/success";
       }
-    } catch (error) {
-      console.error(error);
-      alert("An unexpected error occurred.");
-    } finally {
-      setSubmitting(false);
     }
-  };
+    //  ERROR
+    else {
+      const data = await response.json();
+      alert(data.error || "Registration failed. Please try again.");
+    }
+  } catch (error) {
+    console.error(error);
+    alert("An unexpected error occurred. Please try again.");
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   // Determine if all required team fields and players are completed
   const isTeamComplete =

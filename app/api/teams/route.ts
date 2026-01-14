@@ -114,6 +114,7 @@ if (players.length < 7) {
       success: true,
       teamId: team.id,
       ticketPdfUrl: ticketBlob.url,
+      message:"Registration successful!"
     });
   } catch (error) {
     console.error("POST /api/teams error:", error);
