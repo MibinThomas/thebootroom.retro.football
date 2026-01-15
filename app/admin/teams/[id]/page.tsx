@@ -48,9 +48,9 @@ export default async function AdminTeamView({
         <h1 className="mt-6 text-secondary font-heading text-4xl uppercase">
           {team.teamName}
         </h1>
-        <p className="text-white/90 mt-1">
+        {/* <p className="text-white/90 mt-1">
           Company: <span className="text-secondary">{team.companyName}</span>
-        </p>
+        </p> */}
 
         {/* Actions */}
         <div className="mt-6 flex flex-wrap gap-3">
@@ -108,12 +108,12 @@ export default async function AdminTeamView({
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 text-primary">
             <Info label="Team Name" value={team.teamName} />
-            <Info label="Company Name" value={team.companyName} />
+            {/* <Info label="Company Name" value={team.companyName} />
             <Info label="Company Sector" value={team.companySector} />
             <Info label="Company Address" value={team.companyAddress} />
             <Info label="Manager Name" value={team.managerName} />
             <Info label="Manager Email" value={team.managerEmail} />
-            <Info label="Manager Phone" value={team.managerPhone} />
+            <Info label="Manager Phone" value={team.managerPhone} /> */}
             <Info label="Captain Name" value={team.captainName} />
             <Info label="Captain Email" value={team.captainEmail} />
             <Info label="Captain Phone" value={team.captainPhone} />

@@ -14,7 +14,7 @@ export async function GET() {
   teams.map((team) => ({
     id: team.id,
     teamName: team.teamName,
-    companyName: team.companyName,
+    // companyName: team.companyName,
     attendance: team.attendance,
     ticketPdfUrl: team.ticketPdfUrl ?? null,   // ✅ correct
     brandGuideUrl: team.brandGuideUrl ?? null, // ✅ correct

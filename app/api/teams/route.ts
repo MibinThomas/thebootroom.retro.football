@@ -29,12 +29,12 @@ export async function POST(request: Request) {
     const formData = await request.formData();
 
     const teamName = formData.get("teamName")?.toString() || "";
-    const companyName = formData.get("companyName")?.toString() || "";
-    const companySector = formData.get("companySector")?.toString() || "";
-    const companyAddress = formData.get("companyAddress")?.toString() || "";
-    const managerName = formData.get("managerName")?.toString() || "";
-    const managerEmail = formData.get("managerEmail")?.toString() || "";
-    const managerPhone = formData.get("managerPhone")?.toString() || "";
+    // const companyName = formData.get("companyName")?.toString() || "";
+    // const companySector = formData.get("companySector")?.toString() || "";
+    // const companyAddress = formData.get("companyAddress")?.toString() || "";
+    // const managerName = formData.get("managerName")?.toString() || "";
+    // const managerEmail = formData.get("managerEmail")?.toString() || "";
+    // const managerPhone = formData.get("managerPhone")?.toString() || "";
     const captainName = formData.get("captainName")?.toString() || "";
     const captainEmail = formData.get("captainEmail")?.toString() || "";
     const captainPhone = formData.get("captainPhone")?.toString() || "";
@@ -82,12 +82,12 @@ if (players.length < 7) {
     const team = await prisma.team.create({
       data: {
         teamName,
-        companyName,
-        companySector,
-        companyAddress,
-        managerName,
-        managerEmail,
-        managerPhone,
+        // companyName,
+        // companySector,
+        // companyAddress,
+        // managerName,
+        // managerEmail,
+        // managerPhone,
         captainName,
         captainEmail,
         captainPhone,

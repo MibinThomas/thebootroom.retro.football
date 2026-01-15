@@ -13,7 +13,7 @@ export default async function AdminHome({
       ? {
           OR: [
             { teamName: { contains: q, mode: "insensitive" } },
-            { companyName: { contains: q, mode: "insensitive" } },
+            { captainPhone: { contains: q, mode: "insensitive" } },
             { captainName: { contains: q, mode: "insensitive" } },
           ],
         }
@@ -55,7 +55,7 @@ export default async function AdminHome({
           <input
             name="q"
             defaultValue={q}
-            placeholder="Search by team, company, captain…"
+            placeholder="Search by team, captain…"
             className="w-full"
           />
         </form>
@@ -63,8 +63,8 @@ export default async function AdminHome({
         <div className="mt-6 bg-panel border-4 border-secondary rounded-xl overflow-hidden">
           <div className="grid grid-cols-12 bg-primary text-secondary font-heading uppercase px-4 py-3">
             <div className="col-span-3">Team</div>
-            <div className="col-span-3">Company</div>
             <div className="col-span-2">Captain</div>
+            <div className="col-span-3">Captain Phone</div>
             <div className="col-span-2">Attendance</div>
             <div className="col-span-2 text-right">Actions</div>
           </div>
@@ -75,8 +75,8 @@ export default async function AdminHome({
               className="grid grid-cols-12 px-4 py-3 border-t border-secondary/30 bg-panel text-primary items-center"
             >
               <div className="col-span-3 font-medium">{t.teamName}</div>
-              <div className="col-span-3">{t.companyName}</div>
               <div className="col-span-2">{t.captainName}</div>
+              <div className="col-span-3">{t.captainPhone}</div>
 
               <div className="col-span-2">
                 <span

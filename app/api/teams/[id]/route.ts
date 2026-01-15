@@ -7,7 +7,7 @@ export async function GET(
 ) {
   const team = await prisma.team.findUnique({
     where: { id: params.id },
-    select: { id: true, ticketPdfUrl: true, teamName: true, companyName: true },
+    select: { id: true, ticketPdfUrl: true, teamName: true },
   });
 
   if (!team) {

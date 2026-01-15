@@ -14,9 +14,9 @@ type Player = {
 type TeamForTicket = {
   id: string;
   teamName: string;
-  companyName: string;
-  managerName: string;
-  managerPhone: string;
+  // companyName: string;
+  // managerName: string;
+  // managerPhone: string;
   captainName: string;
   captainPhone: string;
   createdAt?: Date;
@@ -113,12 +113,12 @@ export async function generateTicketPdf(team: TeamForTicket) {
   const topY = 175;
 
   doc.text(`Team Name: ${team.teamName}`, leftX, topY);
-  doc.text(`Company: ${team.companyName}`, leftX, topY + 20);
+  // doc.text(`Company: ${team.companyName}`, leftX, topY + 20);
   doc.text(`Captain: ${team.captainName}`, leftX, topY + 40);
   doc.text(`Captain Phone: ${team.captainPhone}`, leftX, topY + 60);
 
-  doc.text(`Manager: ${team.managerName}`, rightX, topY);
-  doc.text(`Manager Phone: ${team.managerPhone}`, rightX, topY + 20);
+  // doc.text(`Manager: ${team.managerName}`, rightX, topY);
+  // doc.text(`Manager Phone: ${team.managerPhone}`, rightX, topY + 20);
   doc.text(`Ticket ID: ${team.id}`, rightX, topY + 40);
   doc.text(`Players: ${team.players?.length ?? 0}/10`, rightX, topY + 60);
 

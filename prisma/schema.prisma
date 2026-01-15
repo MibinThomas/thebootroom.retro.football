@@ -10,13 +10,13 @@ datasource db {
 model Team {
   id              String   @id @default(auto()) @map("_id") @db.ObjectId
   teamName        String
-  companyName     String
-  companySector   String
-  companyAddress  String
+  companyName     String?
+  companySector   String?
+  companyAddress  String?
 
-  managerName     String
-  managerEmail    String
-  managerPhone    String
+  managerName     String?
+  managerEmail    String?
+  managerPhone    String?
 
   captainName     String
   captainEmail    String

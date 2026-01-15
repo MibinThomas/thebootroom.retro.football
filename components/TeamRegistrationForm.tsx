@@ -17,12 +17,12 @@ interface Player {
  */
 export default function TeamRegistrationForm() {
   const [teamName, setTeamName] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [companySector, setCompanySector] = useState("");
-  const [companyAddress, setCompanyAddress] = useState("");
-  const [managerName, setManagerName] = useState("");
-  const [managerEmail, setManagerEmail] = useState("");
-  const [managerPhone, setManagerPhone] = useState("");
+  // const [companyName, setCompanyName] = useState("");
+  // const [companySector, setCompanySector] = useState("");
+  // const [companyAddress, setCompanyAddress] = useState("");
+  // const [managerName, setManagerName] = useState("");
+  // const [managerEmail, setManagerEmail] = useState("");
+  // const [managerPhone, setManagerPhone] = useState("");
   const [captainName, setCaptainName] = useState("");
   const [captainEmail, setCaptainEmail] = useState("");
   const [captainPhone, setCaptainPhone] = useState("");
@@ -73,14 +73,14 @@ export default function TeamRegistrationForm() {
 
     // Team details
     formData.append("teamName", teamName);
-    formData.append("companyName", companyName);
-    formData.append("companySector", companySector);
-    formData.append("companyAddress", companyAddress);
+    // formData.append("companyName", companyName);
+    // formData.append("companySector", companySector);
+    // formData.append("companyAddress", companyAddress);
 
     // Manager details
-    formData.append("managerName", managerName);
-    formData.append("managerEmail", managerEmail);
-    formData.append("managerPhone", managerPhone);
+    // formData.append("managerName", managerName);
+    // formData.append("managerEmail", managerEmail);
+    // formData.append("managerPhone", managerPhone);
 
     // Captain details
     formData.append("captainName", captainName);
@@ -138,12 +138,12 @@ export default function TeamRegistrationForm() {
   // Determine if all required team fields and players are completed
   const isTeamComplete =
     teamName.trim() &&
-    companyName.trim() &&
-    companySector.trim() &&
-    companyAddress.trim() &&
-    managerName.trim() &&
-    managerEmail.trim() &&
-    managerPhone.trim() &&
+    // companyName.trim() &&
+    // companySector.trim() &&
+    // companyAddress.trim() &&
+    // managerName.trim() &&
+    // managerEmail.trim() &&
+    // managerPhone.trim() &&
     captainName.trim() &&
     captainEmail.trim() &&
     captainPhone.trim();
@@ -186,7 +186,7 @@ export default function TeamRegistrationForm() {
                 required
               />
             </div>
-            <div>
+            {/* <div>
               <label className="sr-only">Company Name</label>
               <input
                 type="text"
@@ -196,8 +196,8 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setCompanyName(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="sr-only">Company Sector</label>
               <input
                 type="text"
@@ -207,8 +207,8 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setCompanySector(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="sr-only">Company Address</label>
               <input
                 type="text"
@@ -218,8 +218,8 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setCompanyAddress(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="sr-only">Manager Name</label>
               <input
                 type="text"
@@ -229,8 +229,8 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setManagerName(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="sr-only">Manager Email</label>
               <input
                 type="email"
@@ -240,8 +240,8 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setManagerEmail(e.target.value)}
                 required
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="sr-only">Manager Phone</label>
               <input
                 type="tel"
@@ -251,7 +251,7 @@ export default function TeamRegistrationForm() {
                 onChange={(e) => setManagerPhone(e.target.value)}
                 required
               />
-            </div>
+            </div> */}
             <div>
               <label className="sr-only">Captain Name</label>
               <input
