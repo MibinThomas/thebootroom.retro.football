@@ -25,6 +25,6 @@ CREATE TABLE "Player" (
     "teamId" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "jerseySize" TEXT NOT NULL,
-    "preferredPosition" TEXT NOT NULL,
+    -- "preferredPosition" TEXT NOT NULL,
     CONSTRAINT "Player_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "Team" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

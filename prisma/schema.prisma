@@ -37,7 +37,7 @@ model Player {
   teamId            String @db.ObjectId
 
   name              String
-  preferredPosition String
+  preferredPosition String?
   jerseySize        String
   jerseyNumber String? 
 

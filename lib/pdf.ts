@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 
 type Player = {
   name: string;
-  preferredPosition: string;
+  // preferredPosition: string;
   jerseySize: string;
   jerseyNumber?: string | null;
 };
@@ -158,16 +158,16 @@ export async function generateTicketPdf(team: TeamForTicket) {
   // Column x-positions inside the 360px table
   const colNoX = 55;
   const colNameX = 90;
-  const colPosX = 235;
-  const colJNoX = 305;
-  const colSizeX = 360;
+  const colJNoX = 260;
+  const colSizeX = 320;
+  // const colPosX = 235;
 
   // Headers
   doc.text("No.", colNoX, tableTop + 8);
   doc.text("Player Name", colNameX, tableTop + 8);
-  doc.text("Position", colPosX, tableTop + 8);
   doc.text("Jersey No", colJNoX, tableTop + 8);
   doc.text("Jersey", colSizeX, tableTop + 8);
+  // doc.text("Position", colPosX, tableTop + 8);
 
   // Table rows
   doc.fillColor(DARK).fontSize(11);
@@ -182,11 +182,11 @@ export async function generateTicketPdf(team: TeamForTicket) {
 
     doc.fillColor(DARK);
 
-    doc.text(String(idx + 1), colNoX, y);
-    doc.text(p.name || "-", colNameX, y, { width: 135 });
-    doc.text(p.preferredPosition || "-", colPosX, y, { width: 65 });
-    doc.text((p.jerseyNumber ?? "-").toString(), colJNoX, y, { width: 50 });
+    doc.text(String(idx + 1), colNoX, y );
+    doc.text(p.name || "-", colNameX, y, { width: 155 , lineBreak: false , ellipsis: false });
+    doc.text((p.jerseyNumber ?? "-").toString(), colJNoX, y, { width: 50, align: "center" });
     doc.text(p.jerseySize || "-", colSizeX, y);
+    // doc.text(p.preferredPosition || "-", colPosX, y, { width: 65 });
 
     y += rowH;
   });

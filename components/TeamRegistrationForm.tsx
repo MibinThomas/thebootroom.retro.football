@@ -7,7 +7,7 @@ interface Player {
   name: string;
   jerseyNumber: string; // ✅ NEW
   jerseySize: string;
-  preferredPosition: string;
+  // preferredPosition: string;
 }
 
 /**
@@ -30,7 +30,7 @@ export default function TeamRegistrationForm() {
     Array.from({ length: 10 }, () => ({
       name: "",
       jerseySize: "M",
-      preferredPosition: "",
+      // preferredPosition: "",
       jerseyNumber: "", // ✅ add
     }))
   );
@@ -92,10 +92,10 @@ export default function TeamRegistrationForm() {
       formData.append(`players[${idx}][name]`, player.name);
       formData.append(`players[${idx}][jerseyNumber]`, player.jerseyNumber);
       formData.append(`players[${idx}][jerseySize]`, player.jerseySize);
-      formData.append(
-        `players[${idx}][preferredPosition]`,
-        player.preferredPosition
-      );
+      // formData.append(
+      //   `players[${idx}][preferredPosition]`,
+      //   player.preferredPosition
+      // );
     });
 
     // Files
@@ -151,7 +151,7 @@ export default function TeamRegistrationForm() {
   const filledPlayers = players.filter(
     (p) =>
       p.name.trim() &&
-      p.preferredPosition.trim() &&
+      // p.preferredPosition.trim() &&
       p.jerseySize.trim() &&
       p.jerseyNumber.trim()
   );
@@ -300,7 +300,7 @@ export default function TeamRegistrationForm() {
               <h3 className="bg-primary text-secondary font-heading px-4 py-2">
                 Player {idx + 1}
               </h3>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 p-4 bg-panel">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 bg-panel">
                 {" "}
                 {/* Player full name */}
                 <input
@@ -314,7 +314,7 @@ export default function TeamRegistrationForm() {
                   required={idx < 7}
                 />
                 {/* Preferred position */}
-                <input
+                {/* <input
                   type="text"
                   placeholder="Preferred Position"
                   value={player.preferredPosition}
@@ -323,7 +323,7 @@ export default function TeamRegistrationForm() {
                   }
                   className="col-span-1 md:col-span-1 placeholder-secondary placeholder-opacity-70"
                   required={idx < 7}
-                />
+                /> */}
                 <input
                   type="text"
                   inputMode="numeric"
@@ -340,7 +340,7 @@ export default function TeamRegistrationForm() {
                   required={idx < 7}
                 />
                 {/* Jersey size selector buttons */}
-                <div className="flex items-center space-x-1">
+                <div className="flex items-center justify-around space-x-1 md:w-[80%]">
                   {["S", "M", "L", "XL", "XXL"].map((size) => (
                     <button
                       type="button"
@@ -348,7 +348,7 @@ export default function TeamRegistrationForm() {
                       onClick={() =>
                         handlePlayerChange(idx, "jerseySize", size)
                       }
-                      className={`px-2 py-1 border border-secondary rounded font-heading ${
+                      className={`px-3 py-1 border border-secondary rounded font-heading ${
                         player.jerseySize === size
                           ? "bg-primary text-secondary"
                           : "bg-panel text-primary"

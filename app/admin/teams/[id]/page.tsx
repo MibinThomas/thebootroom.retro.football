@@ -125,7 +125,7 @@ export default async function AdminTeamView({
           <div className="bg-primary text-secondary font-heading uppercase px-4 py-3 grid grid-cols-12">
             <div className="col-span-1">#</div>
             <div className="col-span-5">Name</div>
-            <div className="col-span-3">Position</div>
+            {/* <div className="col-span-3">Position</div> */}
             <div className="col-span-1 text-center">Size</div>
             <div className="col-span-2 text-right">Jersey No</div>
           </div>
@@ -137,7 +137,7 @@ export default async function AdminTeamView({
             >
               <div className="col-span-1 font-heading">{idx + 1}</div>
               <div className="col-span-5">{p.name}</div>
-              <div className="col-span-3">{p.preferredPosition}</div>
+              {/* <div className="col-span-3">{p.preferredPosition}</div> */}
               <div className="col-span-1 text-center font-heading">
                 {p.jerseySize}
               </div>

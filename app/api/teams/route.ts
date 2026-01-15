@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       name: string;
       jerseyNumber: string;
       jerseySize: string;
-      preferredPosition: string;
+      // preferredPosition: string;
     }[] = [];
 
     for (let i = 0; i < 10; i++) {
@@ -53,12 +53,12 @@ export async function POST(request: Request) {
     formData.get(`players[${i}][jerseyNumber]`)?.toString() || "";
   const jerseySize =
     formData.get(`players[${i}][jerseySize]`)?.toString() || "";
-  const preferredPosition =
-    formData.get(`players[${i}][preferredPosition]`)?.toString() || "";
+  // const preferredPosition =
+  //   formData.get(`players[${i}][preferredPosition]`)?.toString() || "";
 
   // only push if fully filled
-  if (name && jerseyNumber && jerseySize && preferredPosition) {
-    players.push({ name, jerseyNumber, jerseySize, preferredPosition });
+  if (name && jerseyNumber && jerseySize ) {
+    players.push({ name, jerseyNumber, jerseySize });
   }
 }
 
